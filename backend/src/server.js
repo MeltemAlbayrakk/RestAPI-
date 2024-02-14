@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+app.use(cors());
+const PORT = 3001;
+
+
+  
 
 // MongoDB bağlantısı
 const connectionString = 'mongodb+srv://root:0512ersin@cluster0.lanijqy.mongodb.net/?retryWrites=true&w=majority';
@@ -27,14 +31,14 @@ const Category = mongoose.model('Category', categorySchema);
 const productSchema = new mongoose.Schema({
     name: String,
     price: Number,
-    category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
+    category_id: Number,
 });
 
 const Product = mongoose.model('Product', productSchema);
 
 // Middleware'ler
 app.use(express.json());
-app.use(cors());
+
 
 // Ürünleri listeleme endpoint'i
 app.get('/products', (req, res) => {
@@ -166,7 +170,24 @@ app.delete('/categories/:id', (req, res) => {
 
 
 
-// Server'ı dinleme
-app.listen(PORT, () => {
+const socket = require('socket.io')
+ 
+ 
+const server = app.listen(PORT, () => {
     console.log(`Server ${PORT} portunda başlatıldı.`);
 });
+ 
+app.use(express.static('public'))
+ 
+const io = socket(server)
+io.on('connection',(socket) =>{
+     console.log(socket.id)
+ 
+     socket.on('chat', data =>{
+          io.sockets.emit('chat',data)
+          console.log("seasdasd",data)
+     })
+     socket.on('typing', data =>{
+          socket.broadcast.emit('typing',data)
+     })
+})

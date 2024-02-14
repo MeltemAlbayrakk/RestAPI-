@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
+
+
     const [products, setProducts] = useState([]);
     const [newProduct, setNewProduct] = useState({
         name: '',
@@ -14,12 +16,32 @@ function App() {
         price: '',
         category_id: ''
     });
+    const [updateCategories, setUpdateCategories] = useState({
+        id: '',
+        name: '',
+       
+       
+    });
+    const [categories, setCategories] = useState([]);
+
+
 
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = () => {
+        axios.get('http://localhost:3000/categories')
+        .then(response => {
+            setCategories(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+
+
+
         axios.get('http://localhost:3000/products')
             .then(response => {
                 setProducts(response.data);
@@ -54,7 +76,7 @@ function App() {
     };
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:3000/products/${id}`)
+        axios.delete(`http://localhost:3000/categories/${id}`)
             .then(response => {
                 console.log(`Ürün ID ${id} silindi`);
                 fetchData();
@@ -64,6 +86,16 @@ function App() {
             });
     };
 
+    const handleDeleteCat = (id) => {
+        axios.delete(`http://localhost:3000/products/${id}`)
+            .then(response => {
+                console.log(`Ürün ID ${id} silindi`);
+                fetchData();
+            })
+            .catch(error => {
+                console.error(`Ürün silinemedi ID ${id}:`, error);
+            });
+    };
     const handleUpdate = (id) => {
         const productToUpdate = products.find(item => item._id === id);
         setUpdateProduct({
@@ -73,6 +105,16 @@ function App() {
             category_id: productToUpdate.category_id
         });
     };
+
+    const handleUpdateCat = (id) => {
+        const categoryToUpdate = categories.find(item => item._id === id);
+        setUpdateCategories({
+            id: categoryToUpdate._id,
+            name: categoryToUpdate.name,
+         
+        });
+    };
+    
 
     const handleUpdateProduct = () => {
         axios.put(`http://localhost:3000/products/${updateProduct.id}`, updateProduct)
@@ -103,6 +145,19 @@ function App() {
                     </li>
                 ))}
             </ul>
+            <h1>Kategoriler</h1>
+            <ul>
+            {categories.map(item => (
+                    <li key={item._id}>
+                        {item.name} 
+                        <button onClick={() => handleDeleteCat(item._id)}>Sil</button>
+                        <button onClick={() => handleUpdateCat(item._id)}>Güncelle</button>
+                    </li>
+                ))}
+            </ul>
+
+
+
             <h2>Yeni Ürün Ekle</h2>
             <div>
                 <label>Ürün Adı:</label>
