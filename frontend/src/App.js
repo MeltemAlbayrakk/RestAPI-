@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css'; // Stil dosyası
+import Chat from './screenPages/chat';
 
 function App() {
     const [products, setProducts] = useState([]);
@@ -265,6 +266,7 @@ function App() {
                     </div>
                 )}
             </div>
+            <Chat/>
         </div>
     );
 }
