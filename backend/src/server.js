@@ -4,7 +4,7 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
-const PORT = 3000;
+const PORT = 3001;
 
 
   
@@ -22,6 +22,7 @@ mongoose.connect(connectionString, {
 
 const categorySchema = new mongoose.Schema({
     name: String,
+    category_id: Number,
 
 });
 const Category = mongoose.model('Category', categorySchema);
@@ -118,9 +119,10 @@ app.get('/categories', (req, res) => {
 
 // Yeni kategori ekleme endpoint'i
 app.post('/categories', (req, res) => {
-    const { name } = req.body;
+    const { name , category_id} = req.body;
     const newCategory = new Category({
-        name
+        name,
+        category_id
     });
     newCategory.save()
         .then(category => {
