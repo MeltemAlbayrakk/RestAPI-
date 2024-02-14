@@ -179,7 +179,12 @@ const server = app.listen(PORT, () => {
  
 app.use(express.static('public'))
  
-const io = socket(server)
+const io = socket(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+  })
 io.on('connection',(socket) =>{
      console.log(socket.id)
  
