@@ -27,7 +27,7 @@ const Category = mongoose.model('Category', categorySchema);
 const productSchema = new mongoose.Schema({
     name: String,
     price: Number,
-    category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
+    category_id: Number,
 });
 
 const Product = mongoose.model('Product', productSchema);
