@@ -200,7 +200,7 @@ function App() {
             <tr key={item._id}>
                 <td><span className="product-name">{item.name}</span></td>
                 <td><span className="product-price">{item.price} TL</span></td>
-                <td><span className="product-category">Kategori ID: {item.category_id}</span></td>
+                <td><span className="product-category"> {item.category_id}</span></td>
                 <td><button className="btn-delete" onClick={() => handleDelete(item._id)}>Sil</button></td>
                 <td><button className="btn-update" onClick={() => handleUpdate(item._id)}>Güncelle</button></td>
             </tr>
@@ -212,8 +212,8 @@ function App() {
 <table id='customers'>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Kategori</th>
+            <th>Kategori ID</th>
+            <th>Kategori Adı</th>
            
             <th>Sil</th>
             <th>Güncelle</th>
@@ -222,9 +222,8 @@ function App() {
     <tbody>
         {categories.map(item => (
             <tr key={item._id}>
-                <td><span className="product-name">{item.name}</span></td>
-               
                 <td><span className="product-category">{item.category_id}</span></td>
+                <td><span className="product-name">{item.name}</span></td>
                 <td><button className="btn-delete" onClick={() => handleDeleteCat(item._id)}>Sil</button></td>
                 <td><button className="btn-update" onClick={() => handleUpdateCat(item._id)}>Güncelle</button></td>
             </tr>
@@ -254,6 +253,10 @@ function App() {
                         <div>
                             <label>Ürün Adı:</label>
                             <input type="text" name="name" value={updateProduct.name} onChange={(e) => setUpdateProduct({...updateProduct, name: e.target.value})}/>
+                        </div>
+                        <div>
+                            <label>Kategori ID</label>
+                            <input type="text" name="name" value={updateProduct.category_id} onChange={(e) => setUpdateProduct({...updateProduct, category_id: e.target.value})}/>
                         </div>
                         
                       

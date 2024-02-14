@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
  
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect('http://localhost:3001');
  
 function Chat() {
   const [sender, setSender] = useState('');
@@ -68,7 +68,7 @@ function Chat() {
           />
         </div>
         <div>
-          <button id="submitBtn" onClick={sendMessage}>Gönder</button>
+          <button className="btn-update"  id="submitBtn" onClick={sendMessage}>Gönder</button>
         </div>
       </div>
     </div>
