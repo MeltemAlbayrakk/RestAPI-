@@ -26,6 +26,7 @@ function App() {
     const [updateCategories, setUpdateCategories] = useState({
       id: '',
       name: '',
+      category_id:''
      
      
   });
@@ -37,14 +38,15 @@ function App() {
 
     const fetchData = () => {
 
-      axios.get('http://localhost:3000/categories')
+      axios.get('http://localhost:3001/categories')
       .then(response => {
           setCategories(response.data);
       })
       .catch(error => {
           console.error('Error fetching data:', error);
       });
-        axios.get('http://localhost:3000/products')
+
+        axios.get('http://localhost:3001/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -70,7 +72,7 @@ function App() {
   };
 
     const handleAddNewProduct = () => {
-        axios.post('http://localhost:3000/products', newProduct)
+        axios.post('http://localhost:3001/products', newProduct)
             .then(response => {
                 console.log('Ürün başarıyla eklendi:', response.data);
                 fetchData();
@@ -86,7 +88,7 @@ function App() {
     };
 
     const handleAddNewCategory = () => {
-      axios.post('http://localhost:3000/categories', newCategory)
+      axios.post('http://localhost:3001/categories', newCategory)
           .then(response => {
               console.log('kategori başarıyla eklendi:', response.data);
               fetchData();
@@ -103,7 +105,7 @@ function App() {
 
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:3000/products/${id}`)
+        axios.delete(`http://localhost:3001/products/${id}`)
             .then(response => {
                 console.log(`Ürün ID ${id} silindi`);
                 fetchData();
@@ -114,7 +116,7 @@ function App() {
     };
 
     const handleDeleteCat = (id) => {
-      axios.delete(`http://localhost:3000/categories/${id}`)
+      axios.delete(`http://localhost:3001/categories/${id}`)
           .then(response => {
               console.log(`Ürün ID ${id} silindi`);
               fetchData();
@@ -145,7 +147,7 @@ function App() {
   
 
     const handleUpdateProduct = () => {
-        axios.put(`http://localhost:3000/products/${updateProduct.id}`, updateProduct)
+        axios.put(`http://localhost:3001/products/${updateProduct.id}`, updateProduct)
             .then(response => {
                 console.log('Ürün başarıyla güncellendi:', response.data);
                 fetchData();
@@ -162,48 +164,75 @@ function App() {
     };
 
     const handleUpdateCategory = () => {
-      axios.put(`http://localhost:3000/categories/${updateCategories.id}`, updateCategories)
-          .then(response => {
-              console.log('kategori başarıyla güncellendi:', response.data);
-              fetchData();
-              setUpdateCategories({
-                  id: '',
-                  name: '',
-         
-                  category_id: ''
-              });
-          })
-          .catch(error => {
-              console.error('kategori güncellenemedi:', error);
-          });
-  };
+        axios.put(`http://localhost:3001/categories/${updateCategories.id}`, updateCategories)
+            .then(response => {
+                console.log('kategori başarıyla güncellendi:', response.data);
+                fetchData();
+                setUpdateCategories({
+                    id: '',
+                    name: '',
+           
+                    category_id: ''
+                });
+            })
+            .catch(error => {
+                console.error('kategori güncellenemedi:', error);
+            });
+    };
 
 
     return (
         <div className="container">
             <h1>Ürünler</h1>
-            <ul>
-                {products.map(item => (
-                    <li key={item._id}>
-                        <span className="product-name">{item.name}</span>
-                        <span className="product-price">{item.price} TL</span>
-                        <span className="product-category">Kategori ID: {item.category_id}</span>
-                        <button className="btn-delete" onClick={() => handleDelete(item._id)}>Sil</button>
-                        <button className="btn-update" onClick={() => handleUpdate(item._id)}>Güncelle</button>
-                    </li>
-                ))}
-            </ul>
 
-            <h1>Kategoriler</h1>
-            <ul>
-            {categories.map(item => (
-                    <li key={item._id}>
-                        {item.name} 
-                        <button onClick={() => handleDeleteCat(item._id)}>Sil</button>
-                        <button onClick={() => handleUpdateCat(item._id)}>Güncelle</button>
-                    </li>
-                ))}
-            </ul>
+            <table id='customers'>
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Fiyat</th>
+            <th>Kategori ID</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+    </thead>
+    <tbody>
+        {products.map(item => (
+            <tr key={item._id}>
+                <td><span className="product-name">{item.name}</span></td>
+                <td><span className="product-price">{item.price} TL</span></td>
+                <td><span className="product-category">Kategori ID: {item.category_id}</span></td>
+                <td><button className="btn-delete" onClick={() => handleDelete(item._id)}>Sil</button></td>
+                <td><button className="btn-update" onClick={() => handleUpdate(item._id)}>Güncelle</button></td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
+<h1>Kategoriler</h1>
+<table id='customers'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kategori</th>
+           
+            <th>Sil</th>
+            <th>Güncelle</th>
+        </tr>
+    </thead>
+    <tbody>
+        {categories.map(item => (
+            <tr key={item._id}>
+                <td><span className="product-name">{item.name}</span></td>
+               
+                <td><span className="product-category">{item.category_id}</span></td>
+                <td><button className="btn-delete" onClick={() => handleDeleteCat(item._id)}>Sil</button></td>
+                <td><button className="btn-update" onClick={() => handleUpdateCat(item._id)}>Güncelle</button></td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
+           
             <div className="form-container">
                 <h2>Yeni Ürün Ekle</h2>
                 <div>
@@ -227,10 +256,7 @@ function App() {
                             <input type="text" name="name" value={updateProduct.name} onChange={(e) => setUpdateProduct({...updateProduct, name: e.target.value})}/>
                         </div>
                         
-                        <div>
-                            <label>Kategori ID:</label>
-                            <input type="text" name="category_id" value={updateProduct.category_id} onChange={(e) => setUpdateProduct({...updateProduct, category_id: e.target.value})}/>
-                        </div>
+                      
                         <button className="btn-update" onClick={handleUpdateProduct}>Güncelle</button>
                     </div>
                 )}
@@ -244,17 +270,17 @@ function App() {
                     <label>kategori Adı:</label>
                     <input type="text" name="name" value={newCategory.name} onChange={handleChangeCat} />
                 </div>
-               
                 <div>
                     <label>Kategori ID:</label>
                     <input type="text" name="category_id" value={newCategory.category_id} onChange={handleChangeCat} />
                 </div>
+               
                 <button className="btn-add" onClick={handleAddNewCategory}>Ürün Ekle</button>
                 {updateCategories.id && (
                     <div>
-                        <h2>Ürünü Güncelle</h2>
+                        <h2>Kategori Güncelle</h2>
                         <div>
-                            <label>Ürün Adı:</label>
+                            <label>Kategori Adı:</label>
                             <input type="text" name="name" value={updateCategories.name} onChange={(e) => setUpdateCategories({...updateCategories, name: e.target.value})}/>
                         </div>
                      
